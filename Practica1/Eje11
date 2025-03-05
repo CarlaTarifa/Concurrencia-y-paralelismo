@@ -1,0 +1,25 @@
+Realice una solución concurrente de grano grueso (utilizando <> y/o <await B; S>) el siguiente problema. En un examen final hay P alumnos y 3 profesores. 
+Cuando todos los alumnos han llegado comienza el examen. Cada alumno resuelve su examen, lo entrega y espera a que alguno de los profesores lo corrija y le indique la nota. 
+Los profesores corrigen los exámenes respectando el orden en que los alumnos van entregando
+
+Cola c;
+bool corregidos[P]=([P] false) 
+int cantA=0,notas[P]=([P] -1)
+
+Process Alumnos[id:0..P-1]{
+  text examen;
+  <cantA++>
+  <await cantA==P> // espero que lleguen todos
+  //Inicia Examen
+  <push(c,id,examen)>
+  <await corregidos[id]>
+}
+
+Process Profesor[id:0..2]{
+  int idA
+  text e
+  <await not empty (c)
+      pop(c,idA,e)>
+  //Corrige examen
+  corregidos[idA]=true
+}
