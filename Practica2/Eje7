@@ -1,0 +1,52 @@
+En un examen final hay P alumnos y 3 profesores. Cuando todos los alumnos han llegado comienza el examen. Cada alumno resuelve su examen, lo entrega y espera a que alguno 
+de los profesores lo corrija y le indique la nota. Los profesores corrigen los exámenes respectando el orden en que los alumnos van entregando. 
+Nota: todos los procesos deben terminar.
+
+sem mutex=1;
+    turno[P]=([P] 0)
+    entrego=0;
+    barrera=0;
+    contador=1;
+Cola c;
+int notas[P],cant=0;
+
+Procees Alumno[id:0..P-1]{
+ int nota;
+ P(mutex);
+ cant++;
+ if(cant==P) {
+  for i=0..P-1 -> V(barrera)
+ }
+ V(mutex)
+ P(barrera)
+ //inicia examen
+ //resuelve examen
+ for i=0..P-1 {
+   P(mutex);
+   push(c,id);
+   V(mutex)
+ }
+ V(entrego)
+ P(turno[id])
+ nota=notas[id]
+}
+
+Process Profesores[id:0..2]{
+  int idA,cantC=0;
+  P(entrego)
+  P(contador)
+  while(cantC<P) {
+    cantC++;
+    V(contador)
+    P(mutex)
+    pop(c,idA,e)
+    V(mutex)
+    nota[idA]=Corregir(e)
+    V(turno[idA])
+    P(entrego)
+    P(contador)
+  }
+  V(contador)
+}
+
+}
