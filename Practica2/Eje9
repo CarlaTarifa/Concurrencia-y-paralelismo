@@ -1,0 +1,35 @@
+Simular la atención en una Terminal de Micros que posee 3 puestos para hisopar a 150 pasajeros. En cada puesto hay una Enfermera que atiende a los pasajeros de acuerdo al orden de 
+llegada al mismo. Cuando llega un pasajero se dirige al puesto que tenga menos gente esperando. Espera a que la enfermera correspondiente lo llame para hisoparlo, y luego se retira. 
+Nota: suponer que existe una función Hisopar() que simula la atención del pasajero por parte de la enfermera correspondiente.
+
+sem mutex[3]=([3] 1)
+    turno[150]=([150] 0)
+    llegue=0
+    contador=0
+    listo[150]=([150] 0)
+int puestoC[3]=0
+Cola c[3]
+
+Process Puesto[id:0..2]{
+  int idP;
+  P(mutex)
+  pop(c,idP,id)
+  V(mutex)
+  V(turno[idP])
+  //hisopar
+  V(listo[idp])
+}
+
+Process Pasajero[id:0..149]{
+  int idPP;
+  P(contador)
+  min=Minimo(puestoC)
+  V(contador)
+  //Me dirijo a la fila mas corta
+  P(mutex[min])
+  push(c[min],id)
+  V(mutex[min])
+  P(turno[id])
+  //Hisopar
+  P(listo[id])
+}
