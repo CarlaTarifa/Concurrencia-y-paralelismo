@@ -1,0 +1,51 @@
+Una empresa de turismo posee 4 combis con capacidad para 25 personas cada una y UN vendedor que vende los pasajes a los clientes de acuerdo al orden de llegada. 
+Hay C clientes que al llegar intentan comprar un pasaje para una combi en particular (el cliente conoce este dato); si aún hay lugar en la combi seleccionada se le da el pasaje y se
+dirige hacia la combi; en caso contrario se retira. Cada combi espera a que suban los 25 pasajeros, luego realiza el viaje, y cuando llega al destino deja bajar a todos los pasajeros. 
+Nota: maximizar la concurrencia; suponga que para cada combi al menos 25 clientes intentarán comprar pasaje.
+
+sem  mutex=1; // para  la cola
+     turno[C]=([C] 0);
+     barrera[4]=([4] 0) ; //para cada combi?
+     lluegue=0;
+Cola c;
+bool lugar[P]=([P] false); // lugar en la combi
+int contador[4]=([4] 0);
+
+Porcedure Combi[id:0..3]{
+  if(contador[id]==25) { //algo falta
+    for i=0..24 -> V(barrera[id])
+  }
+  //inicia viaje
+  for i=0..25 -> V(barrera[id])
+  //fin de viaje
+}
+
+Procedure Cliente[id:0..C-1]{
+  int idCombi;
+  P(mutex)
+  push(c,id,idCombi)
+  V(mutex)
+  V(llegue) //aviso que llegue
+  P(turno[id]) //espero mi turno
+  //me atienden
+  if(lugar[id]) {
+    contador[idCombi]++;
+    P(barrera[idCombi]); //me duermo
+  }
+  else //me voy
+}
+
+Procedure Vendedor{
+  int idC,idCombi,cantL[4]=([4] 0)
+  for i=0..P-1 {
+    P(llegue)
+    pop(c,idC,idCombi)
+    V(mutex)
+    if(cantL[idCombi]<25){
+        cantL[idCombi]++
+        lugar[idC]=true;
+        V(turno[idC])
+    }
+    else lugar[idC]=false;
+  }
+}
