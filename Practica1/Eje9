@@ -1,0 +1,28 @@
+Realice una solución concurrente de grano grueso (utilizando <> y/o <await B; S>) el siguiente problema. En un entrenamiento de futbol hay 25 jugadores y un entrenador. 
+Cuando los 25 jugadores han llegado el entrenador le da una charla técnica a cada uno de ellos (de a uno a la vez) en orden aleatorio (es decir que cuando el entrenador está libre 
+elige a cualquiera de los jugadores con los que aún no habló). Cuando un jugador termino su charla técnica con el entrenador, corre durante 30 minutos y luego se retira. 
+El entrenador se retira después de hablar con los 25 jugadores. 
+Nota: maximizar concurrencia; suponga que existe una función Siguiente llamada por el entrenador que le devuelve un número aleatorio que indica el ID de un jugador con el que aún no 
+hablo.
+
+int cantJ=0,Actual=-1
+bool termino=false
+
+Process Jugadores[id:0..24]{
+  <cantJ++> //Sumo jugador que llega
+  <await actual=id> //Espero mi turno
+  //Inicia charla
+  <await termino> // Espero que termine la charla
+  termino=false //aviso que ya me fui
+  delay(30min) // se va a correr
+  //Se retira
+}
+
+Process Entrenador{
+  <await cantJ==25> // espero que lleguen todos los jugadores
+  for i=0..24 {
+    actual=Siguiente()
+    //Inicia charla
+    termino=true;
+    <await termino = false>
+}
