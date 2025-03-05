@@ -1,0 +1,20 @@
+Un sistema operativo mantiene 5 instancias de un recurso almacenadas en una cola, cuando un proceso necesita usar una instancia del recurso 
+la saca de la cola, la usa y cuando termina de usarla la vuelve a depositar.
+
+Sem mutex=-1; //Para la cola
+Cola c; // para los recursos
+Sem espera=5; // cantidad de instancias
+
+Process Sistema{
+  while(true){
+    P(espera); //espero que haya instancias
+    P(mutex);
+    pop(c);
+    V(mutex);
+    //utilizo
+    P(mutex);
+    push(c);
+    V(mutex);
+    V(espera);
+  }
+}
