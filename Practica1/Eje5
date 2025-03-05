@@ -1,0 +1,17 @@
+Realice una solución concurrente de grano grueso (utilizando <> y/o <await B; S>) el siguiente problema. 
+Se debe calcular el valor promedio de un vector de 1000 números por medio de 10 procesos. Al finalizar todos los procesos deben guardar en una variable local el resultado final.
+
+int vector[1000];
+int total=0;
+int termine=0;
+
+Process Promedio[id: 0..9]{
+  int parcial=0 , i;
+  for( i=id*100 ; i < 100(id+1)-1 ; i++) {
+      parcial= parcial + vector[i];
+  }
+  <termine++>
+  <total=total + parcial>
+  <await termine=10>
+  prom= total/1000 ; // <>?? 
+}
