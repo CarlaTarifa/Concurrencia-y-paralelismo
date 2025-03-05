@@ -1,0 +1,33 @@
+Realice una solución concurrente de grano grueso (utilizando <> y/o <await B; S>) el siguiente problema. En un examen de la secundaria hay un preceptor y una profesora que deben tomar
+un examen escrito a 45 alumnos. El preceptor se encarga de darle el enunciado del examen a los alumnos cundo los 45 han llegado (es el mismo enunciado para todos). 
+La profesora se encarga de ir corrigiendo los exámenes de acuerdo al orden en que los alumnos van entregando. Cada alumno al llegar espera a que le den el enunciado, resuelve el
+examen, y al terminar lo deja para que la profesora lo corrija y le dé la nota. 
+Nota: maximizar la concurrencia; todos los procesos deben terminar; suponga que la profesora tiene una función corregirExamen que recibe un examen y devuelve un entero con la nota.
+
+Cola c; // para la entrega de examen
+int cantA=0,notas[45]=([45] -1) ;
+bool corregidos[45]=([45] false) , examen[45]=([45] false)
+
+Process Alumno[id:0..44]{
+  text e;
+  <cantA++> // cuento los alumnos
+  <await examen>
+  //Inicia examen
+  <push(c,id,e)>
+  <await corregido> // espero correccion
+}
+
+Process Preceptor{
+  <await cantA==45> // espero todos los alumnos
+  for i=0..44 examen[i]=true // entrega de examen? 
+}
+
+Process Profesora{
+  int idA;
+  text e;
+  for i=0..45 o un while?
+      <await not empty(c)
+            pop(c,idA,e)>
+      nota[idA]=CorregirExamen()
+      corregidos[idA]=true;
+}
