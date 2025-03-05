@@ -1,0 +1,56 @@
+Se tiene un curso con 40 alumnos, la maestra entrega una tarea distinta a cada alumno, luego cada alumno realiza su tarea y se la entrega a la maestra para que 
+la corrija, esta revisa la tarea y si está bien le avisa al alumno que puede irse, si la tarea está mal le indica los errores, el alumnocorregirá esos errores y 
+volverá a entregarle la tarea a la maestra para que realice la corrección nuevamente, esto se repite hasta que la tarea no tenga errores.
+
+sem turno[40]=([40] 0) ; //turno alumno
+    mutex=1;//Para la cola
+    maestra=0; // Maestra libre para entregar tareas
+bool tareaC[40]=([40] false);
+recurso tareas[40]; // crea tareas
+Cola c;
+
+Process Alumno[id:0..39]{
+  recurso tarea;
+  P(turno[id]); // espero mi tarea
+  tarea=tareas[id];
+  //Realizar tarea
+  P(mutex)
+  push(c,id,tarea)
+  V(mutex)
+  V(maestra) // aviso a la maestra que entregue
+  P(turno[id])//espero mi correccion
+  while(not tareaC[id]){
+    //rehacer tarea
+    P(mutex)
+    push(c,id,tarea)
+    V(mutex)
+    V(maestra) // aviso a la maestra que entregue
+    P(turno[id])//espero mi correccion
+   }
+  //me voy
+}
+
+Process Maestra{
+  int termino=0,idA;
+  text tarea;
+  for i=0..39{
+    tareas[i]=Tarea_random()//entrega de tareas
+    V(turno[i])
+  }
+  while(termino<40){
+    P(maestra);
+    P(mutex)
+    pop(c,idA,tarea)
+    V(mutex)
+    if(Corregir(tarea)){
+        tareaC[idA]=true;
+        termino++;
+    }
+    else 
+        tareaC[idA]=false;
+    V(turno[idA]) // aviso al alumno
+  }
+}
+
+    
+  
