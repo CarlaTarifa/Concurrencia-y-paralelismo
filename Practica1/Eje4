@@ -1,0 +1,15 @@
+Realice una solución concurrente de grano grueso (utilizando <> y/o <await B; S>) para el siguiente problema. 
+Un sistema operativo mantiene 5 instancias de un recurso almacenadas en una cola, cuando un proceso necesita usar una instancia del recurso la saca de la cola, la usa y cuando 
+termina de usarla la vuelve a depositar.
+
+Cola c; // Posee 5 instancias
+
+Process Sistema[ id: 0..N-1]{
+  Recurso r;
+  While(true) {
+    <If (not empty(c))
+        pop(c,r)>
+    //Utilizo recurso
+    <push (c,r)>
+  }
+}
