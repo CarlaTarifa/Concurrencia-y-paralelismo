@@ -1,0 +1,42 @@
+Se desea modelar el funcionamiento de un banco en el cual existen 5 cajas para realizar pagos. Existen P personas que desean pagar. Para esto cada una selecciona la caja donde hay
+menos personas esperando, una vez seleccionada espera a ser atendido. 
+Nota: maximizando la concurrencia.
+
+chan llegue(int); // aviso que llegue a las filas
+chan turno[P]();
+chan seleccionCaja[P](int);//para la caja
+chan libre(int);
+chan llegueCaja[5](int);
+
+Process Personas[id:0..N-1]{
+  int caja;
+  send llegue(id);//aviso que llegue
+  receive seleccionC[id](caja);//elija caja vacia
+  send llegueCaja[caja](id);// llego a la caja
+  receive turno[id]();//espero mi turno
+  //me atienden
+}
+
+Process Coordinador{
+  int idC,idP,cajas[5]=([5] 0);
+  while(true){
+    receive llegue(id);
+    if(not empty(libre)){
+        receive libre(idC);
+        cajas[idC]--; // esta atendiendo
+    }
+    min=Minimo(cajas);//calculo la fila con menos gente
+    cajas[idC]++
+    send seleccionC[idP](min);
+  }
+}
+
+Process Caja[id:0..4]{
+  int idP;
+  while(true){
+    send libre(id);
+    receive llegueCaja[id](idP);
+    send turno[idP]();
+    //atiendo
+  }
+}
