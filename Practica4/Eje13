@@ -1,0 +1,25 @@
+En un estadio de fútbol hay una máquina expendedora de gaseosas que debe ser usada por E Espectadores de acuerdo al orden de llegada. Cuando el espectador accede a la máquina, la 
+usa y luego se retira para dejar al siguiente. 
+Nota: cada Espectador una sólo una vez la máquina.
+
+Process Expectador[id:0..E-1]{
+  while(true){
+    Expendedora!llegue(id);
+    Expendedora?turno();
+    //utilizo
+    Expendedora!salir();
+  }
+}
+Process Expendedora{
+  int idE;
+  bool libre=true;
+  cola c;
+  while(true){
+    if(libre);Expectador[*]?llegue(idE) -> libre=false; 
+                                           Expectador[idE]!turno();
+    □ (libre=false);Expectador[*]?llegue(idE)->push(c,idE);
+    □ Expectador[*]?fin() -> if (not empty(c)) ->pop(c,idE);
+                                                 Expectador[idE]!turno();
+                              else libre=true;
+  }
+}
