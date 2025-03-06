@@ -1,0 +1,24 @@
+En una mesa de exámenes hay 3 profesores que deben corregir los exámenes de 30 alumnos de acuerdo al orden en que terminaron. Cada examen es corregido por un único profesor. Cuando
+un alumno termino su examen lo deja y espera hasta que alguno de los profesores (cualquiera) lo corrija y le dé la nota. 
+Cuando un profesor está libre toma el siguiente examen para corregir y al terminar le da la nota al alumno correspondiente.
+
+chan turno[30](int);//para que le de la nota
+     termine(text,int); //entrega examen e id
+     pedido(int);
+     siguiente[3](text);
+Process Alumno[id:0..29]{
+  text examen,nota;
+  while(true){
+    send termine(examen,id); //envio examen
+    receive turno[id](nota); //espero correcion y nota
+  }
+}
+Process Profesor[id:0..2]{
+  int idA;
+  text e,nota;
+  while(true){
+    receive termine(ex,idA);
+    //corrige
+    send turno[idA](nota);
+  }
+}
