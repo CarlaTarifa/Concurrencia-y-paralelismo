@@ -1,0 +1,49 @@
+En una mesa de exámenes hay 3 profesores que les deben tomar un examen oral a 30 alumnos de acuerdo al orden de llegada. Cada examen es tomado por un único profesor.
+Cuando un alumno llega, espera a que alguno de los profesores (cualquiera) lo llame y se dirige al escritorio correspondiente a ese profesor, donde le tomará el examen; al terminar
+el profesor le da la nota y el alumno se retira. Cuando un profesor está libre llama al siguiente alumno. 
+Nota: todos los procesos deben terminar su ejecución.
+
+Process Alumno[id:0..29]{
+  int idP,nota;
+  text examen;
+  for i:0..29 {
+      admin.llegue(id);
+      escritorio[idP].rendir(nota);
+  }
+}
+
+Process Profesor[id:0..2]{
+  int idA,cantA=0;
+  while(cant > 0){
+    admin.Proximo(id);
+    escritorio[id].examen(e);
+    nota=Calificar();
+    escritorio[id].nota(nota);
+    //tendria que restar
+  }
+}
+
+Monitor admin{
+  cond esperaA;
+  cola profeLibre;
+  int esperando,cantLibre=0;
+  Procedure llegue(idP:out int){
+    if(cantLibre==0){
+      esperando++;
+      wait(esperaA);
+    }
+    else
+      cantLibre--;
+    pop(profeLibre,idP);
+  }
+  Procedure Proximo(idP: in int){
+    push(profeLibre,idP);
+    if(esperando > 0){
+      esperando--;
+      signal(esperaA);
+    }
+    else
+      cantLibre++;
+  }
+}
+    
