@@ -1,0 +1,28 @@
+Implementar el acceso a una base de datos de solo lectura que puede atender a lo sumo 5 consultas simultáneas.
+
+Process Proceso {
+  base.solicitar();
+  //utilizar
+  base.salir();
+}
+
+Monitor base{
+  int instancias=5 , esperando=0;
+  cond cola;
+  Procedure Solicitar(){
+    if(instancia==0) {
+        esperando++
+        wait(c);
+    }
+    else
+      instancia--;
+  }
+  Procedure Salir(){
+    if(esperando > 0 ) {
+      esperando--;
+      signal(c);
+    }
+    else
+      instancia++
+  }
+}
