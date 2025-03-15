@@ -1,0 +1,114 @@
+Se requiere modelar un puente de un solo sentido, el puente solo soporta el peso de 5 unidades de peso. Cada auto pesa 1 unidad, cada camioneta pesa 2 unidades y cada camión 3 
+unidades. Suponga que hay una cantidad innumerable de vehículos (A autos, B camionetas y C camiones).
+a.Realice la solución suponiendo que todos los vehículos tienen la misma prioridad.
+
+Procedure Puente is:
+  Task Puente IS
+    Entry PasarAuto();
+    Entry PasarCamioneta();
+    Entry PasarCamion();
+    Entry Salir(peso:IN int);
+  end puente;
+  Task Auto;
+  Task Camioneta();
+  Task Camion();
+
+  Task Body Auto IS
+  begin
+      Puente.PasarAuto(); //Espero a pasar
+      Puente.Salir(1);//salgo y paso mi peso
+  end auto;
+
+  Task Body Camioneta IS
+  begin
+      Puente.PasarCamioneta(); //Espero a pasar
+      Puente.Salir(2);//salgo y paso mi peso
+  end camioneta;
+  
+  Task Body Camion IS
+  begin
+      Puente.PasarCamion(); //Espero a pasar
+      Puente.Salir(3);//salgo y paso mi peso
+  end camion;
+
+  Task Body Puente IS
+  contador:int;
+  begin
+      contador=0;
+      Loop
+        Select 
+            when(contador + 1 <=5) => Accept PasarAuto() do
+                                      contador=contador+1;
+                                      end PasarAuto;
+            or 
+              when(contador + 2 <=5) => Accept PasarCamioneta() do
+                                      contador=contador+2;
+                                      end PasarCamioneta;
+            or 
+             when(contador + 3 <=5) => Accept PasarCamion() do
+                                      contador=contador+3;
+                                      end PasarCamion;
+            or
+              Accept Salir(peso:In int) do
+              contador=contador-peso;
+              end salir;
+      end select;
+  end loop;
+end puente;
+
+      Puente.PasarAuto(); //Espero a pasar
+      Puente.Salir(1);//salgo y paso mi peso
+  end auto;
+
+b.Modifique la solución para que tengan mayor prioridad los camiones que el resto de los vehículos.
+
+Procedure Puente is:
+  Task Puente IS
+    Entry PasarAuto();
+    Entry PasarCamioneta();
+    Entry PasarCamion();
+    Entry Salir(peso:IN int);
+  end puente;
+  Task Auto;
+  Task Camioneta();
+  Task Camion();
+
+  Task Body Auto IS
+  begin
+      Puente.PasarAuto(); //Espero a pasar
+      Puente.Salir(1);//salgo y paso mi peso
+  end auto;
+
+  Task Body Camioneta IS
+  begin
+      Puente.PasarCamioneta(); //Espero a pasar
+      Puente.Salir(2);//salgo y paso mi peso
+  end camioneta;
+  
+  Task Body Camion IS
+  begin
+      Puente.PasarCamion(); //Espero a pasar
+      Puente.Salir(3);//salgo y paso mi peso
+  end camion;
+
+  Task Body Puente IS
+  contador:int;
+  begin
+      contador=0;
+      Loop
+        Select 
+            when(contador <=2) => Accept PasarCamion(); 
+                contador=contador+3;              
+            or 
+              when(contador<=3) and (PasarCamion'.count=0) => Accept PasarCamioneta();
+                contador=contador+2;
+            or 
+             when(contador<=4) and (PasarCamion'.count=0) and  => Accept PasarAuto();
+                contador=contador+1;
+            or
+              Accept Salir(peso:In int) do
+              contador=contador-peso;
+              end salir;
+      end select;
+  end loop;
+end puente;
